@@ -1,0 +1,25 @@
+{
+    "project_file_path": "mmFiles/validation.mm",
+    "entrance_portal_labels": ["8", "1", "2", "3", "4", "5", "6", "7"],
+    "exit_portal_labels": ["1"],
+    "stair_labels": ["1"],
+    "escalator_labels": ["1"],
+    "ped_amount": 23,
+    "save_flow_data": true,
+    "save_trajectories": false,
+    "enable_auto_terminate": false,
+    "type": "train_platform",
+    "ins_measure": [
+        "time_occupied"
+    ],
+    "measure": [
+        "SR", "MT", "MFR", "MDB", "CA"
+    ],
+    "ins_measure_config": [
+        {"boundary": [137, -9, 145, -3], "sampling_period": 5 }
+    ],
+    "post_measure": {
+        "flow_count": {"type": "one-portal"},
+        "agent_summary": {},
+        "population_count": {"volume_nr": 1}}
+}
