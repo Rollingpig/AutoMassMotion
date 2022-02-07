@@ -1,3 +1,7 @@
+"""
+    The code below partly originates from Python examples in MassMotion tutorials,
+    as detailed in docstrings of the functions
+"""
 import massmotion_10_6 as mm
 import random
 import agentLib.groups as group_theory
@@ -208,6 +212,7 @@ class AlightingFlow(BaseFlow):
         self.current_frame += 1
 
     def set_follower_goal(self, follower, leader, group, configuration):
+        """The code originates from Python examples in MassMotion tutorials"""
         leader_position = leader.get_position()
         leader_heading = leader.get_heading()
         leader_velocity = leader.get_velocity()
@@ -227,6 +232,7 @@ class AlightingFlow(BaseFlow):
         """
         Update group status and control the followers
         This function should be called when the simulation enters a new frame
+        Part of the code originates from Python examples in MassMotion tutorials
         :config frame_summary:
         :config simulation:
         :return:
@@ -255,7 +261,7 @@ class AlightingFlow(BaseFlow):
                         self.set_follower_goal(follower, leader, group, configuration)
 
         # switch leader and follower every 0.5 sec,
-        # so as to neutralize the improper repulsive forces which followers impose to leaders
+        # so as to cancel out the improper repulsive forces which followers impose to leaders
         if self.current_frame % 6 == 0:
             temp_group = {}
             for leader in self.groups:

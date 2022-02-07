@@ -1,7 +1,15 @@
 """
-    Danrui Li
-    2021.02
+    Author: Danrui Li
+
+    An instance of 'SimModel' will integrate all components together,
+    carrying out a complete pipeline of simulation task.
+
+    It starts from initializing the simulation environment from config files. [Initialization function]
+    Then it processes a number of simulations from a given input list.[inputs_list_processing function]
+    Finally, it stores the results to the disk.[inputs_list_processing function]
+
     MassMotion只能在Python 3.4中运行
+    Current MassMotion SDK can only run in Python 3.4
 """
 import massmotion_10_6 as mm
 import time
@@ -49,7 +57,8 @@ class SimModel:
     def run(self, params, project_path):
         """
         Run several simulations based on a single given environment
-        [WARNING]profile的速度和半径都没法调，就是个摆设
+        [WARNING] Due to the bugs in MassMotion SDK,
+        the velocity and radius of pedestrian profile can not be modified
         """
         sim_i = 0
         avg_res = None
@@ -79,6 +88,7 @@ class SimModel:
             instant_evaluator = InstantEvaluate(params['ins_measure'], params['ins_measure_config'])
             while not simulation.is_done():
                 # 针对每一个行人流对象，执行其释放行人、更新状态的动作
+                # Update the status for each pedestrian flow object
                 for i in range(len(flows)):
                     flow = flows[i]
                     flow.release(simulation)
@@ -86,15 +96,20 @@ class SimModel:
                         flow.update_existing(frame_summary, exit_portal_ids)
                         flow.update_group_status(frame_summary, simulation)
                 # 针对当前帧，运行即时结果评价器一次
+                # Run 'real-time' evaluators once
                 instant_evaluator.update(simulation)
                 # 进入下一帧
+                # Go to the next frame
                 frame_summary = simulation.step()
 
-            # Evaluation
+            # Run evaluations that were supposed to run after the simulation
             result = PostEvaluate.get_results(project, test_label, sim_id, params['post_measure'])
+            # Collect evaluation results that were generated during the simulation
             result.update(instant_evaluator.get_result())
 
             # 把本次模拟的结果加入到结果管理器中，并返回当前输入条件下的历次模拟的均值结果
+            # Push the new result into the result manager,
+            # And the manager will return the average of all previous results under current input
             avg_res = self.result_mgr.new_sim_result(result, test_label, self.run_num)
 
             if params['save_trajectories']:
@@ -102,6 +117,7 @@ class SimModel:
                 db.extract(trajectory_path)
 
             # 单次模拟结束
+            # The end of a single simulation run
             del flows
             del instant_evaluator
             project.close()

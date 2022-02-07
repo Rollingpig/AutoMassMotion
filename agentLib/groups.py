@@ -1,3 +1,6 @@
+"""
+    The code below originates from Python examples in MassMotion tutorials
+"""
 from massmotion_10_6 import *
 import random
 import math
